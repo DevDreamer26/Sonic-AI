@@ -16,8 +16,19 @@ async function parseRequestBody(req) {
     req.on("error", reject);
   });
 }
+
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:3000",
+];
+
 const server = http.createServer(async function (req, res) {
-  res.setHeader("Access-Control-Allow-Origin", process.env.FRONTEND_URL || "*");
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "content-type");
 
